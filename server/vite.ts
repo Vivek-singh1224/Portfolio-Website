@@ -61,16 +61,15 @@ export async function setupVite(app: Express, server: Server) {
   });
 }
 
+// vite.ts
+import path from "path";
+import { Express } from "express";
+
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(__dirname, "../client/dist");
+  const staticPath = path.join(process.cwd(), "dist/public");
 
-  if (!fs.existsSync(distPath)) {
-    throw new Error(`Build not found at: ${distPath}. Did you run 'vite build'?`);
-  }
-
-  app.use(express.static(distPath));
-
-  app.use("*", (_req, res) => {
-    res.sendFile(path.join(distPath, "index.html"));
+  app.use(express.static(staticPath));
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(staticPath, "index.html"));
   });
 }
